@@ -5,12 +5,15 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.codewithdurgesh.blog.entities.Role;
 import com.codewithdurgesh.blog.entities.User;
 import com.codewithdurgesh.blog.exceptions.ResourceNotFoundException;
 import com.codewithdurgesh.blog.payloads.AppConstants;
 import com.codewithdurgesh.blog.payloads.UserDto;
+import com.codewithdurgesh.blog.repositories.RoleRepo;
 import com.codewithdurgesh.blog.repositories.UserRepo;
 import com.codewithdurgesh.blog.services.UserServiceI;
 
@@ -25,6 +28,13 @@ public class UserServiceImpl implements UserServiceI {
 	
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private RoleRepo roleRepo;
+	
 	/**
 	 * @implNote This method is for creating user
 	 * @author kirti
@@ -39,6 +49,7 @@ public class UserServiceImpl implements UserServiceI {
 		log.info("Completed DAO call for creating user");
 		return this.userToDto(savedUser);
 	}
+	
 	/**
 	 * @implNote This method is for updating user
 	 * @author kirti
@@ -61,6 +72,7 @@ public class UserServiceImpl implements UserServiceI {
 		log.info("Completeing DAO call for updating user with userId :{} ",userId);
 		return userDto2;
 	}
+	
 	/**
 	 * @implNote This method is for getting user by userId
 	 * @author kirti
@@ -74,6 +86,7 @@ public class UserServiceImpl implements UserServiceI {
 		log.info("Completed DAO call for getting user with userId :{} ",userId);
 		return this.userToDto(user);
 	}
+	
 	/**
 	 * @implNote This method is for getting all user
 	 * @author kirti
@@ -88,6 +101,7 @@ public class UserServiceImpl implements UserServiceI {
 
 		return userDtolist;
 	}
+	
 	/**
 	 * @implNote This method is for deleting user
 	 * @author kirti
@@ -119,5 +133,21 @@ public class UserServiceImpl implements UserServiceI {
 	public UserDto userToDto(User user) {
 		UserDto userdto = this.modelMapper.map(user, UserDto.class);
 		return userdto;
+	}
+	
+	
+	@Override
+	public UserDto registerNewUser(UserDto userdto) {
+
+		User user = this.modelMapper.map(userdto, User.class);
+		//encode password
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		
+		//roles
+		Role role = this.roleRepo.findById(AppConstants.NORMAL_USER).get();
+		user.getRoles().add(role);
+		User newUser = this.userRepo.save(user);
+		
+		return this.modelMapper.map(newUser, UserDto.class);
 	}
 }

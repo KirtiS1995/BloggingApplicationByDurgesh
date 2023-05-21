@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 
 @Configuration
 public class MyConfiguration {
+	
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();

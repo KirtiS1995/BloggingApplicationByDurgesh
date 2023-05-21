@@ -1,10 +1,15 @@
 package com.codewithdurgesh.blog.payloads;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.codewithdurgesh.blog.entities.Role;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +30,13 @@ public class UserDto {
 	
 	@NotEmpty
 //	@Size(min = 3, max = 10,message = "Password must be minimum 3 and max 10 characters.")
-	@Pattern(regexp = "^[a-z]{5}[0-9]{3}",message = "Password incorrect....")
+//	@Pattern(regexp = "^[a-z]{5}[0-9]{3}",message = "Password incorrect....")
 	private String password;
-	
 	
 	
 	@NotEmpty
 	private String about;
+	
+	private Set<RoleDto> roles = new HashSet<>();
+
 }

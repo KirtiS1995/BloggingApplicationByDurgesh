@@ -5,6 +5,8 @@ import java.util.List;
 import com.codewithdurgesh.blog.payloads.UserDto;
 
 public interface UserServiceI {
+	
+	UserDto registerNewUser(UserDto user);
 
 	UserDto createUser(UserDto user);
 	
