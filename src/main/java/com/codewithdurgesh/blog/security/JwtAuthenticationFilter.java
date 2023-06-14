@@ -19,8 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
@@ -50,18 +52,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				username = this.jwtTokenHelper.getUsernameFromToken(token);
 			}
 			catch (IllegalArgumentException e) {
-					System.out.println("Unable to get JWT token");
+//					System.out.println("Unable to get JWT token");
+					log.warn("Unable to get JWT token");
 			}
 			catch (ExpiredJwtException e) {
-				System.out.println(" JWT token has expired ");
+				log.warn("JWT token has expired ");
 			}
 			catch (MalformedJwtException e) {
-				System.out.println(" Invalid JWT  ");
+				log.warn(" Invalid JWT  ");
 			}
 		}
 		else
 		{
-			System.out.println("JWT Token doesnot starts with bearer.");
+			log.warn("JWT Token doesnot starts with bearer.");
 		}
 		
 		//once we get token .then validate
@@ -83,13 +86,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 			else
 			{
-				System.out.println("Invalid JWT token ");
+				log.warn("Invalid JWT token ");
 			}
 			
 		}
 		else
 		{
-			System.out.println("Username is null or context is not null ");
+			log.warn("Username is null or context is not null ");
 		}
 		
 		filterChain.doFilter(request, response);

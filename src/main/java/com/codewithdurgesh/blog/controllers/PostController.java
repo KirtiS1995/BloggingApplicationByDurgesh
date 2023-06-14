@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Value;
@@ -173,8 +174,9 @@ public class PostController {
 	}
 	
 	// Post image upload
+
 	@PostMapping("/post/image/upload/{postId}")
-	public ResponseEntity<PostDto> uploadPostImage(@RequestParam("image") MultipartFile image,
+	public ResponseEntity<PostDto> uploadPostImage(@RequestPart("image") MultipartFile image,
 			@PathVariable Integer postId) throws IOException {
 		logger.info("Request entering for uploading image  ");
 		PostDto postDto = this.postServiceI.getPostById(postId);
